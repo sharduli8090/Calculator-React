@@ -1,0 +1,31 @@
+- ui for calculator
+https://dribbble.com/shots/15429766-Calculator-App
+
+
+- logic
+elements
+display screen
+- message
+- ans
+buttons panel
+- num 0 to 9
+- ops + - * /
+- equal butt = 
+- ans butt for prev ans
+- clear all button
+- clear one button
+
+- have flag false if only one num
+have true flag if more than one num
+if flag false then same num returned as equal
+if flag true then ans returned after performing
+add tot nums in var
+add recent ops in var
+update tot and recent everytime it is clicked
+if clear all clicked refresh tot and recent to default
+if clear one clicked then clear one in string thast is being updated 
+then if any op is clicked then make it store in tot after performin ops then make recent ops default
+
+History
+save history as a string in local storage every time an answer in local storage as json of string of nums and ops and ans every time equal is clicked
+
