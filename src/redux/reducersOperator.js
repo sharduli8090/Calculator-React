@@ -1,17 +1,17 @@
 const initialState = {
-    theme: false,  
+    op: "",  
   };
   
-const reducer = (state = initialState, action) => { 
+const reducer4 = (state = initialState, action) => { 
     switch (action.type) {
-      case 'SET_THEME':
+      case 'SET_OP':
         return {
           ...state,
-          theme: action.payload,
+          op: action.payload,
         };
       default:
         return state;
     }
   };
   
-  export default reducer;
+  export default reducer4;
