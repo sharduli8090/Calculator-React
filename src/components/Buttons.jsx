@@ -1,11 +1,11 @@
 import { useSelector, useDispatch } from "react-redux";
 import { setAns } from "../redux/actions";
-import { setstrans } from "../redux/actions";
 import { setExp } from "../redux/actions";
 import { setOp } from "../redux/actions";
+import { setTheme } from "../redux/actions";
 import { useEffect, useState } from "react";
 
-const Buttons = () => {
+const Buttons = ({setResultClass,resultClass}) => {
   const theme = useSelector((state) => state.theme.theme);
   let operator = useSelector((state) => state.op.op);
   let exp = useSelector((state) => state.num.num);
@@ -23,18 +23,25 @@ const Buttons = () => {
   const dispatch = useDispatch();
 
   const handleEquals = () => {  
-    clearExp();
-  };
-  const clearExp = ()=>{
-    setExp("0");
-  }
+    setResultClass(true);
+  }; 
 
   const handleNum = (num) => {
-    setCurrNum((prev) => {
-      return prev + num;
-    });
-    dispatch(setExp(exp === "0" ? num.toString() : exp + num));
+    if (resultClass) {
+      dispatch(setExp(num.toString()));
+      dispatch(setAns(0));
+      setCurrNum(num.toString());
+      setPrevAns(0);
+      dispatch(setOp(""));
+      setResultClass(false); 
+    } else {
+      setCurrNum((prev) => {
+        return prev + num;
+      });
+      dispatch(setExp(exp === "0" ? num.toString() : exp + num));
+    }
   };
+  
 
   useEffect(() => {
     if (exp !== "0" && currNum) {
@@ -58,6 +65,7 @@ const Buttons = () => {
   };
 
   const handleOperator = (op) => {
+    if (!resultClass) {
     if (opArray.includes(exp.charAt(exp.length - 1)) && op !== operator) {
       let resultExp = sliceLastCharacterAndAppend(exp, op);
       dispatch(setExp(resultExp));
@@ -66,7 +74,7 @@ const Buttons = () => {
       setCurrNum("");
       dispatch(setExp(exp + op));
     }
-    dispatch(setOp(op));
+    dispatch(setOp(op));}
   };
 
   const sliceLastCharacterAndAppend = (expression, op) => {
@@ -82,6 +90,16 @@ const Buttons = () => {
     setCurrNum("");
     setPrevAns(0);
   };
+  
+  const handleNegativeValues = ()=>{
+    if(exp!=="0"){
+      let currNumToChange = currNum;
+      if(currNumToChange.charAt(0)!="-"){
+        currNumToChange = "-"+currNumToChange;
+        dispatch(setExp(exp+currNumToChange))
+      }
+    }
+  }
 
   const handleKeyDown = (event) => {
     const key = event.key;
@@ -101,6 +119,9 @@ const Buttons = () => {
           break;
         case "Escape":
           handleClear();
+          break;
+        case " ":
+          dispatch(setTheme(!theme));
           break;
         default:
           break;
@@ -192,7 +213,7 @@ const Buttons = () => {
       >
         0
       </div>
-      <div className={`${classes} text-[#5ec7bc]`}>+/-</div>
+      <div className={`${classes} text-[#5ec7bc]`} onClick={()=>handleNegativeValues()}>+/-</div>
       <div
         className={`${classes} bg-gradient-to-l from-cyan-500 to-blue-500 hover:cursor-pointer`}
         onClick={()=>handleEquals()}
