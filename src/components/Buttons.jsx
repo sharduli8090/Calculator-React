@@ -5,7 +5,7 @@ import { setOp } from "../redux/actions";
 import { setTheme } from "../redux/actions";
 import { useEffect, useState } from "react";
 
-const Buttons = ({setResultClass,resultClass}) => {
+const Buttons = ({ setResultClass, resultClass }) => {
   const theme = useSelector((state) => state.theme.theme);
   let operator = useSelector((state) => state.op.op);
   let exp = useSelector((state) => state.num.num);
@@ -22,9 +22,9 @@ const Buttons = ({setResultClass,resultClass}) => {
 
   const dispatch = useDispatch();
 
-  const handleEquals = () => {  
+  const handleEquals = () => {
     setResultClass(true);
-  }; 
+  };
 
   const handleNum = (num) => {
     if (resultClass) {
@@ -33,7 +33,7 @@ const Buttons = ({setResultClass,resultClass}) => {
       setCurrNum(num.toString());
       setPrevAns(0);
       dispatch(setOp(""));
-      setResultClass(false); 
+      setResultClass(false);
     } else {
       setCurrNum((prev) => {
         return prev + num;
@@ -41,7 +41,6 @@ const Buttons = ({setResultClass,resultClass}) => {
       dispatch(setExp(exp === "0" ? num.toString() : exp + num));
     }
   };
-  
 
   useEffect(() => {
     if (exp !== "0" && currNum) {
@@ -66,15 +65,16 @@ const Buttons = ({setResultClass,resultClass}) => {
 
   const handleOperator = (op) => {
     if (!resultClass) {
-    if (opArray.includes(exp.charAt(exp.length - 1)) && op !== operator) {
-      let resultExp = sliceLastCharacterAndAppend(exp, op);
-      dispatch(setExp(resultExp));
-    } else if (!opArray.includes(exp.charAt(exp.length - 1))) {
-      setPrevAns(ans);
-      setCurrNum("");
-      dispatch(setExp(exp + op));
+      if (opArray.includes(exp.charAt(exp.length - 1)) && op !== operator) {
+        let resultExp = sliceLastCharacterAndAppend(exp, op);
+        dispatch(setExp(resultExp));
+      } else if (!opArray.includes(exp.charAt(exp.length - 1))) {
+        setPrevAns(ans);
+        setCurrNum("");
+        dispatch(setExp(exp + op));
+      }
+      dispatch(setOp(op));
     }
-    dispatch(setOp(op));}
   };
 
   const sliceLastCharacterAndAppend = (expression, op) => {
@@ -90,16 +90,16 @@ const Buttons = ({setResultClass,resultClass}) => {
     setCurrNum("");
     setPrevAns(0);
   };
-  
-  const handleNegativeValues = ()=>{
-    if(exp!=="0"){
+
+  const handleNegativeValues = () => {
+    if (exp !== "0") {
       let currNumToChange = currNum;
-      if(currNumToChange.charAt(0)!="-"){
-        currNumToChange = "-"+currNumToChange;
-        dispatch(setExp(exp+currNumToChange))
+      if (currNumToChange.charAt(0) != "-") {
+        currNumToChange = "-" + currNumToChange;
+        dispatch(setExp(exp + currNumToChange));
       }
     }
-  }
+  };
 
   const handleKeyDown = (event) => {
     const key = event.key;
@@ -213,10 +213,15 @@ const Buttons = ({setResultClass,resultClass}) => {
       >
         0
       </div>
-      <div className={`${classes} text-[#5ec7bc]`} onClick={()=>handleNegativeValues()}>+/-</div>
+      <div
+        className={`${classes} text-[#5ec7bc]`}
+        onClick={() => handleNegativeValues()}
+      >
+        +/-
+      </div>
       <div
         className={`${classes} bg-gradient-to-l from-cyan-500 to-blue-500 hover:cursor-pointer`}
-        onClick={()=>handleEquals()}
+        onClick={() => handleEquals()}
       >
         =
       </div>
