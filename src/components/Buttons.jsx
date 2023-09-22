@@ -4,17 +4,19 @@ import { setExp } from "../redux/actions";
 import { setOp } from "../redux/actions";
 import { setTheme } from "../redux/actions";
 import { useEffect, useState } from "react";
+import { RiDeleteBack2Line } from "react-icons/ri";
+
 
 const Buttons = ({ setResultClass, resultClass }) => {
   const theme = useSelector((state) => state.theme.theme);
   let operator = useSelector((state) => state.op.op);
   let exp = useSelector((state) => state.num.num);
   let ans = useSelector((state) => state.ans.ans);
-  const opArray = ["*", "-", "/", "+"];
+  const opArray = ["*", "-", "/", "+","%"];
   const [prevAns, setPrevAns] = useState(0);
   const [currNum, setCurrNum] = useState("");
   const classes =
-    "w-16 h-16 flex justify-center items-center hover:bg-gray-200 hover:cursor-pointer rounded-full text-xl";
+    "w-16 h-16 flex justify-center items-center hover:bg-gray-200 hover:cursor-pointer rounded-full text-xl  transition-all duration-300 ease-in hover:delay-100";
   const whiteTextClass = "text-white hover:text-black";
   const numArr1 = [1, 2, 3];
   const numArr2 = [4, 5, 6];
@@ -26,6 +28,20 @@ const Buttons = ({ setResultClass, resultClass }) => {
     setResultClass(true);
   };
 
+  const handleDeleteOne = ()=>{
+   let updatedCurrNum =  sliceLastCharacterAndAppend(currNum,"");
+   let updatedExp = sliceLastCharacterAndAppend(exp,"");
+   if(updatedExp===""){
+    dispatch(setExp("0"));
+   }else{
+   dispatch(setExp(updatedExp));} 
+   if(updatedCurrNum?.length!==0){
+   setCurrNum(updatedCurrNum);
+   }else{
+    setCurrNum(0);
+  }
+   }
+   
   const handleNum = (num) => {
     if (resultClass) {
       dispatch(setExp(num.toString()));
@@ -78,9 +94,13 @@ const Buttons = ({ setResultClass, resultClass }) => {
   };
 
   const sliceLastCharacterAndAppend = (expression, op) => {
-    let resultExpression = expression.slice(0, -1);
-    resultExpression = resultExpression + op;
-    return resultExpression;
+    try {
+      let resultExpression = expression.slice(0, -1);
+      resultExpression = resultExpression + op;
+      return resultExpression;
+    } catch (error) {
+      
+    }
   };
 
   const handleClear = () => {
@@ -88,16 +108,20 @@ const Buttons = ({ setResultClass, resultClass }) => {
     dispatch(setAns(0));
     dispatch(setExp("0"));
     setCurrNum("");
-    setPrevAns(0);
+    setPrevAns(0); 
+    setResultClass(false);
   };
 
   const handleNegativeValues = () => {
-    if (exp !== "0") {
+    if (exp !== "0" ) {
       let currNumToChange = currNum;
-      if (currNumToChange.charAt(0) != "-") {
-        currNumToChange = "-" + currNumToChange;
-        dispatch(setExp(exp + currNumToChange));
+      if (currNumToChange.charAt(0) !== "-") {
+        currNumToChange = "-" + currNumToChange; 
+      }else{
+        currNumToChange = currNumToChange.replace("-","");
       }
+      dispatch(setExp(exp.replace(currNum,currNumToChange)));
+      setCurrNum(currNumToChange);
     }
   };
 
@@ -120,9 +144,12 @@ const Buttons = ({ setResultClass, resultClass }) => {
         case "Escape":
           handleClear();
           break;
-        case " ":
-          dispatch(setTheme(!theme));
-          break;
+          case " ":
+            dispatch(setTheme(!theme));
+            break;
+            case "Backspace":
+             handleDeleteOne();
+              break;
         default:
           break;
       }
@@ -145,7 +172,7 @@ const Buttons = ({ setResultClass, resultClass }) => {
       <div className={`${classes} text-red-500`} onClick={() => handleClear()}>
         C
       </div>
-      <div className={`${classes}text-[#5ec7bc]`}>() </div>
+      <div className={`${classes}`}  onClick={()=>{handleDeleteOne()}}><RiDeleteBack2Line color="#5ec7bc"/> </div>
       <div
         className={`${classes} text-[#5ec7bc]`}
         onClick={() => handleOperator("%")}
