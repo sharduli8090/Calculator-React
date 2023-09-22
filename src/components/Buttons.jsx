@@ -17,6 +17,7 @@ const Buttons = ({ setResultClass, resultClass }) => {
   const [currNum, setCurrNum] = useState("");
   const classes =
     "w-16 h-16 flex justify-center items-center hover:bg-gray-200 hover:cursor-pointer rounded-full text-xl  transition-all duration-300 ease-in hover:delay-100";
+      const classesOfEachRow = "w-full flex justify-evenly items-center"; 
   const whiteTextClass = "text-white hover:text-black";
   const numArr1 = [1, 2, 3];
   const numArr2 = [4, 5, 6];
@@ -33,6 +34,7 @@ const Buttons = ({ setResultClass, resultClass }) => {
    let updatedExp = sliceLastCharacterAndAppend(exp,"");
    if(updatedExp===""){
     dispatch(setExp("0"));
+    dispatch(setAns(0));
    }else{
    dispatch(setExp(updatedExp));} 
    if(updatedCurrNum?.length!==0){
@@ -169,6 +171,7 @@ const Buttons = ({ setResultClass, resultClass }) => {
         theme ? "bg-gray-800" : "bg-gray-100"
       }  w-full h-3/5 rounded-lg`}
     >
+      <div className={`${classesOfEachRow}`}>
       <div className={`${classes} text-red-500`} onClick={() => handleClear()}>
         C
       </div>
@@ -185,6 +188,10 @@ const Buttons = ({ setResultClass, resultClass }) => {
       >
         /
       </div>
+      </div>
+            <div className={`${classesOfEachRow}`}>
+
+
       {numArr1.map((numArr) => {
         return (
           <div
@@ -201,6 +208,8 @@ const Buttons = ({ setResultClass, resultClass }) => {
       >
         *
       </div>
+      </div>      <div className={`${classesOfEachRow}`}>
+
       {numArr2.map((numArr) => {
         return (
           <div
@@ -217,6 +226,10 @@ const Buttons = ({ setResultClass, resultClass }) => {
       >
         +
       </div>
+      </div>
+            <div className={`${classesOfEachRow}`}>
+
+      
       {numArr3.map((numArr) => {
         return (
           <div
@@ -233,6 +246,10 @@ const Buttons = ({ setResultClass, resultClass }) => {
       >
         -
       </div>
+      </div>
+            <div className={`${classesOfEachRow}`}>
+
+
       <div className={`${classes} text-[#5ec7bc]`}>.</div>
       <div
         className={`${classes} ${theme ? whiteTextClass : ""}`}
@@ -251,6 +268,7 @@ const Buttons = ({ setResultClass, resultClass }) => {
         onClick={() => handleEquals()}
       >
         =
+      </div>
       </div>
     </div>
   );
